@@ -1,0 +1,29 @@
+<p>sessions-component works!</p>
+<button (click)="allSessions()">Click me</button>
+
+<table border="5px">
+  <thead>
+  <th>Kombina</th>
+  <th>Guess</th>
+  </thead>
+  <tbody *ngFor="let session of sessions">
+
+    <h1>{{"SESSION " + session.id}}</h1>
+    <tr *ngFor="let sector of session.sectors">
+      <td>
+        {{sector.lesson + " " + sector.activity}}
+      </td>
+      <td>
+        <select>
+        <option *ngFor="let guess of sector.guesses"
+                [value]="guess.f"
+                [attr.selected]="guess.f==sector.guesses[0].f ? true : null">
+          {{guess.fileName + " : " +guess.match}}
+        </option>
+        </select>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+NE RADIM
