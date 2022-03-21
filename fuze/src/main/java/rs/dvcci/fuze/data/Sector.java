@@ -18,6 +18,7 @@ public class Sector {
     String lesson;
     String activity;
     List<Guess> guesses;
+    Guess picked;
 
     public Sector(String lesson, String activity, FileCrawler fileCrawler){
         this.lesson = lesson;
@@ -25,9 +26,11 @@ public class Sector {
         this.guesses = getGuesses(fileCrawler);
     }
 
+
+
     public List<Guess> getGuesses(FileCrawler fileCrawler) {
 
-        if (this.guesses == null){
+        if (this.guesses == null && fileCrawler != null){
             this.guesses = new ArrayList<>();
             List<File> files = fileCrawler.getFiles();
             for (File file: files){
@@ -36,7 +39,6 @@ public class Sector {
             }
             Collections.sort(this.guesses);
         }
-
         return this.guesses;
     }
 }

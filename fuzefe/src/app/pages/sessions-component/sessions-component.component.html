@@ -1,6 +1,3 @@
-<p>sessions-component works!</p>
-<button (click)="allSessions()">Click me</button>
-
 <table border="5px">
   <thead>
   <th>Kombina</th>
@@ -14,15 +11,17 @@
         {{sector.lesson + " " + sector.activity}}
       </td>
       <td>
-        <select>
-        <option *ngFor="let guess of sector.guesses"
-                [value]="guess.f"
-                [attr.selected]="guess.f==sector.guesses[0].f ? true : null">
+        <select [(ngModel)]="sector.picked" >
+        <option
+                *ngFor="let guess of sector.guesses"
+                [ngValue]="guess"
+                [attr.selected]="sector.picked == guess ? true : null">
           {{guess.fileName + " : " +guess.match}}
         </option>
         </select>
       </td>
     </tr>
+    <button (click)="exportSession(session)">Export session</button>
 
   </tbody>
 </table>
