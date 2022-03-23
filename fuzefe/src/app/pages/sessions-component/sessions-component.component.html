@@ -1,9 +1,19 @@
-<table border="5px">
-  <thead>
-  <th>Kombina</th>
-  <th>Guess</th>
-  </thead>
-  <tbody *ngFor="let session of sessions">
+
+  <label for="excel">Enter path to .xls!!! file.</label>
+  <input name="excel" id="excel" type="text" [(ngModel)]="excelPath">
+  <label for="dirPath">Enter path to sample directory.</label>
+  <input type="text" id="dirPath" type="dirPath" [(ngModel)]="dirPath">
+  <br>
+  <button (click)="configure()">Configure</button>
+  <br>
+  <button (click)="ngOnInit()">Load</button>
+  <div class="d-flex p-2">
+  <table [border]="1">
+    <thead>
+    <th>Kombina</th>
+    <th>Guess</th>
+    </thead>
+    <tbody *ngFor="let session of sessions">
 
     <h1>{{"SESSION " + session.id}}</h1>
     <tr *ngFor="let sector of session.sectors">
@@ -11,18 +21,24 @@
         {{sector.lesson + " " + sector.activity}}
       </td>
       <td>
-        <select [(ngModel)]="sector.picked" >
-        <option
-                *ngFor="let guess of sector.guesses"
-                [ngValue]="guess"
-                [attr.selected]="sector.picked == guess ? true : null">
-          {{guess.fileName + " : " +guess.match}}
-        </option>
+        <select [(ngModel)]="sector.picked">
+          <option
+            *ngFor="let guess of sector.guesses"
+            [ngValue]="guess"
+            [attr.selected]="sector.picked == guess ? true : null">
+            {{guess.fileName + " : " + guess.match}}
+          </option>
         </select>
       </td>
     </tr>
-    <button (click)="exportSession(session)">Export session</button>
+    <button (click)="exportSession(session)">Export session {{session.id}}</button>
 
-  </tbody>
-</table>
-NE RADIM
+    </tbody>
+  </table>
+</div>
+  <img  (click)="hidden = !hidden "
+        [hidden]="hidden "
+        class="images" id="footer" src="./assets/logo.png"/>
+  <html>
+
+

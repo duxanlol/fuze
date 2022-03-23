@@ -1,0 +1,15 @@
+table td, table th {
+  border: 1px solid black;
+}
+
+#footer {
+  position: fixed;
+  size:50px;
+  padding: 10px 10px 0px 10px;
+  bottom: 0;
+  right: 0px;
+  width: 10%;
+  /* Height of the footer*/
+  height: auto;
+/* background: grey; */
+}

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.dvcci.fuze.data.Config;
 import rs.dvcci.fuze.data.Sector;
 import rs.dvcci.fuze.data.Session;
 import rs.dvcci.fuze.util.ExcelReader;
@@ -31,15 +32,18 @@ public class MainController {
 
     final ExcelReader excelReader;
     final FileCrawler fileCrawler;
-
+    Config config;
     @GetMapping("/test")
     @CrossOrigin(origins = "http://localhost:4200")
     public List<Session> test() throws BiffException, IOException {
-        fileCrawler.setDirectoryName("/home/dusan/fuzedata/Burmese Mixing/");
-        Map<Integer, List<String>> data = excelReader.readJExcel("/home/dusan/fuze-root/fuze/yes.xls");
-        System.out.println(data);
-        List<Session> sessions = excelReader.processExcel(data);
-        return sessions;
+        if (config != null) {
+            fileCrawler.setDirectoryName(config.getDirPath());
+            Map<Integer, List<String>> data = excelReader.readJExcel(config.getExcel());
+            System.out.println("loaded something.");
+            List<Session> sessions = excelReader.processExcel(data);
+            return sessions;
+        }
+        return null;
     }
     public Boolean concatenateFiles(List<String> sourceFilesList, String destinationFileName) throws Exception {
         Boolean result = false;
@@ -92,12 +96,27 @@ public class MainController {
     @PostMapping("/exportSession")
     @CrossOrigin(origins = "http://localhost:4200")
     public boolean exportSession(@RequestBody Session session) throws Exception {
-        System.out.println("ZVAO EXPORT SESSION SA SESSION " + session);
         ArrayList<String> zaExport = new ArrayList<>();
         for (Sector sector : session.getSectors()){
-            zaExport.add(sector.getPicked().getF().getAbsolutePath());
+            if (!sector.getPicked().getFileName().contains("NULL"))
+                zaExport.add(sector.getPicked().getF().getAbsolutePath());
         }
-
+        System.out.println("SESSION " + session.getId());
+        int cnt = 1;
+        for(String each : zaExport){
+            System.out.println(cnt++ + " : " + each);
+        }
         return concatenateFiles(zaExport, "session_"+session.getId()+".wav");
     }
+
+    @PostMapping("/setConfig")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public Config setConfig(@RequestBody Config config) throws  Exception{
+        System.out.println("ZVAO SET CONFIG ZA CONFIG " + config);
+        this.config = config;
+        return config;
+    }
+
+
+
 }

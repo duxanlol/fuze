@@ -2,6 +2,7 @@
 
 import {Component, Injectable, OnInit} from '@angular/core';
 import {Session} from "../../@core/data/session";
+import {Config} from "../../@core/data/config";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
 
@@ -30,6 +31,9 @@ export class SessionsComponentComponent implements OnInit {
   }
 
   sessions: Session[];
+  excelPath : string;
+  dirPath : string;
+  hidden : boolean;
 
   constructor(private http: HttpClient) {
   }
@@ -48,7 +52,21 @@ export class SessionsComponentComponent implements OnInit {
 
     });
   }
-  
+
+  configure(){
+    const url = "http://localhost:8080/main/setConfig";
+    console.log(this.excelPath, this.dirPath);
+    let config: Config = {
+      dirPath: this.dirPath,
+      excel: this.excelPath,
+    };
+    this.http.post('http://localhost:8080/main/setConfig', config, {headers: this.httpHeaders})
+      .subscribe(res => {
+        console.log('inside postmehtod of sub.function', res);//only objects
+      })
+
+  }
+
   exportSession(session: Session) {
     const url = "http://localhost:8080/main/exportSession";
     this.http.post('http://localhost:8080/main/exportSession', session, {headers: this.httpHeaders})
