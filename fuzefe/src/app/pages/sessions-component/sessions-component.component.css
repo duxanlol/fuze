@@ -13,3 +13,12 @@ table td, table th {
   height: auto;
 /* background: grey; */
 }
+
+.tablerow:hover{width:inherit;height:inherit;background-image: url("./images/insert-row-bellow-icon.png");
+  position:relative;
+  background-repeat: no-repeat;
+  background-size: 30px 30px;
+  background-position: right;
+
+
+}

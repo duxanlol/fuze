@@ -16,8 +16,8 @@
     <tbody *ngFor="let session of sessions">
 
     <h1>{{"SESSION " + session.id}}</h1>
-    <tr *ngFor="let sector of session.sectors">
-      <td>
+    <tr  *ngFor="let sector of session.sectors; let indexOfelement=index;">
+      <td class="tablerow" (click)="tdClick(sector, session, indexOfelement)" >
         {{sector.lesson + " " + sector.activity}}
       </td>
       <td>
@@ -29,7 +29,9 @@
             {{guess.fileName + " : " + guess.match}}
           </option>
         </select>
+        <button *ngIf="sector.activity.includes('#Added')" (click)="removeSector(session, indexOfelement)">REMOVE</button>
       </td>
+
     </tr>
     <button (click)="exportSession(session)">Export session {{session.id}}</button>
 

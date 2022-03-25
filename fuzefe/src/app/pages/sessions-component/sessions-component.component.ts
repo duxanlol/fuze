@@ -1,10 +1,11 @@
 // @ts-ignore
 
-import {Component, Injectable, OnInit} from '@angular/core';
+import {Component, ElementRef, Injectable, OnInit} from '@angular/core';
 import {Session} from "../../@core/data/session";
 import {Config} from "../../@core/data/config";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {Sector} from "../../@core/data/sector";
 
 @Component({
   selector: 'app-sessions-component',
@@ -17,6 +18,14 @@ import {Observable} from "rxjs";
 })
 export class SessionsComponentComponent implements OnInit {
 
+  insert = (arr: any[], index: any, newItem: any) => [
+    // part of the array before the specified index
+    ...arr.slice(0, index),
+    // inserted item
+    newItem,
+    // part of the array after the specified index
+    ...arr.slice(index)
+  ]
 
   ngOnInit(): void {
     this.allSessions().subscribe(data => {
@@ -67,11 +76,39 @@ export class SessionsComponentComponent implements OnInit {
 
   }
 
+  tdClick(sector: Sector, session: Session, indexOfelement: number){
+    console.log(sector);
+    console.log(indexOfelement)
+    let newSector = new Sector();
+    newSector.activity = "#Added item.#";
+    newSector.lesson = "";
+    newSector.guesses = sector.guesses;
+    newSector.picked = sector.guesses[sector.guesses.length];
+    session.sectors = this.insert(session.sectors, indexOfelement+1, newSector)
+
+  }
+
   exportSession(session: Session) {
     const url = "http://localhost:8080/main/exportSession";
+    let notNull = false;
+    session.sectors.forEach( sector =>{
+      if (!sector.picked.fileName.includes("NULL")){
+        notNull = true;
+      }
+    })
+    console.log("NOT NULL IS " + notNull);
+    if(!notNull) {
+      alert("Can't export when all files are NULL.");
+      return;
+    }
     this.http.post('http://localhost:8080/main/exportSession', session, {headers: this.httpHeaders})
       .subscribe(res => {
         console.log('inside postmehtod of sub.function', res);//only objects
       })
+  }
+
+  removeSector(session: Session, indexOfelement: number) {
+    session.sectors.splice(indexOfelement,1);
+
   }
 }
